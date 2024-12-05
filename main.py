@@ -90,12 +90,11 @@ def getUser(userId: int, db: Session = Depends(getDb)):
 
 @app.put("/users/{userId}", response_model=UserResponse)
 def updateUser(userId: int, user: UserCreate, db: Session = Depends(getDb)):
-    hashed_password = pwd_context.hash(user.Password)
     dbUser = db.query(User).filter(User.idUser == userId).first()
     if not dbUser:
         raise HTTPException(status_code=404, detail="Пользователь не найден")
     dbUser.Login = user.Login
-    dbUser.Password = hashed_password
+    dbUser.Password = user.Password
     db.commit()
     return dbUser
 
