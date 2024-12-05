@@ -4,10 +4,6 @@ from sqlalchemy.connectors import pyodbc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
-from passlib.context import CryptContext
-
-# Хеширование паролей
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 server = "DESKTOP-84G2R1V\\SQLEXPRESS"
 database = "flower_service"
@@ -67,9 +63,8 @@ def getDb():
 
 @app.post("/users", response_model=UserResponse, status_code=201)
 def createUser(user: UserCreate, db: Session = Depends(getDb)):
-    hashed_password = pwd_context.hash(user.Password)
     try:
-        dbUser = User(Login=user.Login, Password=hashed_password)
+        dbUser = User(Login=user.Login, Password=user.Password)
         db.add(dbUser)
         db.commit()
         db.refresh(dbUser)
