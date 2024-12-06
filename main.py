@@ -40,7 +40,13 @@ class User(base):
     Password = Column(String, nullable=False)
 
 
-app = FastAPI()
+app = FastAPI(
+    title="FastAPI",
+    description="pracApi",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 class UserCreate(BaseModel):
     Login: str
